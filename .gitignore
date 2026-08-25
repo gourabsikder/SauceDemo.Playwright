@@ -1,0 +1,12 @@
+# Build and test output
+[Bb]in/
+[Oo]bj/
+TestResults/
+.dotnet-cli/
+
+# IDE files
+.vs/
+
+# Local configuration that may contain credentials
+SauceDemo.Playwright/Configuration/appsettings.*.json
+!SauceDemo.Playwright/Configuration/appsettings.json
