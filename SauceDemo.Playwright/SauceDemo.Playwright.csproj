@@ -34,8 +34,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include=".github\workflows\playwright-tests.yml" />
-  </ItemGroup>
-
 </Project>
