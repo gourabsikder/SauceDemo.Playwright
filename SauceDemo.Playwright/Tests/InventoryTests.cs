@@ -17,8 +17,11 @@ public class InventoryTests : BaseTest
 
         var inventoryPage = new InventoryPage(Page);
 
+        Logger.Information("Verifying navigation to the inventory page.");
         await Expect(Page).ToHaveURLAsync(Configuration.GetUrl(Configuration.InventoryPath).AbsoluteUri);
+        Logger.Information("Verifying inventory page title.");
         Assert.That(await inventoryPage.GetPageTitleAsync(), Is.EqualTo("Products"));
+        Logger.Information("Verifying at least one inventory product is displayed.");
         Assert.That(await inventoryPage.GetProductCountAsync(), Is.GreaterThan(0));
     }
 
@@ -35,6 +38,7 @@ public class InventoryTests : BaseTest
         await inventoryPage.AddProductToCartAsync("Sauce Labs Backpack");
         await inventoryPage.GoToCartAsync();
 
+        Logger.Information("Verifying navigation to the cart page.");
         await Expect(Page).ToHaveURLAsync(Configuration.GetUrl("cart.html").AbsoluteUri);
     }
 }

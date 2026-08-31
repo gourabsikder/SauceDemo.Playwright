@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using SauceDemo.Playwright.Logging;
 
 namespace SauceDemo.Playwright.Pages;
 
@@ -19,12 +20,21 @@ public class InventoryPage
         _shoppingCartLink = _page.Locator("[data-test='shopping-cart-link']");
     }
 
-    public Task<string> GetPageTitleAsync() => _pageTitle.InnerTextAsync();
+    public Task<string> GetPageTitleAsync()
+    {
+        TestLogger.LogInformation("Reading inventory page title.");
+        return _pageTitle.InnerTextAsync();
+    }
 
-    public Task<int> GetProductCountAsync() => _productItems.CountAsync();
+    public Task<int> GetProductCountAsync()
+    {
+        TestLogger.LogInformation("Counting inventory products.");
+        return _productItems.CountAsync();
+    }
 
     public async Task AddProductToCartAsync(string productName)
     {
+        TestLogger.LogInformation($"Adding product to cart: {productName}.");
         var productItem = _productItems.Filter(new()
         {
             HasTextString = productName
@@ -33,5 +43,9 @@ public class InventoryPage
         await productItem.GetByRole(AriaRole.Button, new() { NameString = "Add to cart" }).ClickAsync();
     }
 
-    public Task GoToCartAsync() => _shoppingCartLink.ClickAsync();
+    public Task GoToCartAsync()
+    {
+        TestLogger.LogInformation("Navigating to the cart.");
+        return _shoppingCartLink.ClickAsync();
+    }
 }

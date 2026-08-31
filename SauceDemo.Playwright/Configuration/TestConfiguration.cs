@@ -22,6 +22,9 @@ public sealed class TestConfiguration
         LockedOutUser = GetUser("LockedOut");
         InvalidCredentialsMessage = GetRequiredValue("ExpectedMessages:InvalidCredentials");
         LockedOutMessage = GetRequiredValue("ExpectedMessages:LockedOut");
+        BrowserSettings = new BrowserSettings(
+            GetRequiredBrowserSetting("Browser"),
+            GetRequiredBrowserSettingBoolean("Headless"));
     }
 
     public Uri BaseUrl { get; }
@@ -31,6 +34,7 @@ public sealed class TestConfiguration
     public TestUser LockedOutUser { get; }
     public string InvalidCredentialsMessage { get; }
     public string LockedOutMessage { get; }
+    public BrowserSettings BrowserSettings { get; }
 
     public Uri GetUrl(string relativePath) => new(BaseUrl, relativePath);
 
@@ -56,6 +60,23 @@ public sealed class TestConfiguration
     private TestUser GetUser(string userType) => new(
         GetRequiredValue($"Users:{userType}:Username"),
         GetRequiredValue($"Users:{userType}:Password"));
+
+    private string GetRequiredBrowserSetting(string key) =>
+        _configuration[$"BrowserSettings:{key}"]
+        ?? throw new InvalidOperationException($"BrowserSettings:{key} is not configured.");
+
+    private bool GetRequiredBrowserSettingBoolean(string key)
+    {
+        var value = GetRequiredBrowserSetting(key);
+
+        if (!bool.TryParse(value, out var result))
+        {
+            throw new InvalidOperationException($"BrowserSettings:{key} must be true or false.");
+        }
+
+        return result;
+    }
 }
 
 public sealed record TestUser(string Username, string Password);
+public sealed record BrowserSettings(string Browser, bool Headless);

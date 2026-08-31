@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using SauceDemo.Playwright.Logging;
 
 namespace SauceDemo.Playwright.Pages;
 
@@ -23,13 +24,21 @@ public class CartPage
         _checkoutButton = _page.Locator("[data-test='checkout']");
     }
 
-    public Task<int> GetCartItemCountAsync() => _cartItems.CountAsync();
+    public Task<int> GetCartItemCountAsync()
+    {
+        TestLogger.LogInformation("Counting cart items.");
+        return _cartItems.CountAsync();
+    }
 
-    public async Task<bool> IsProductInCartAsync(string productName) =>
-        await _productNames.GetByText(productName, new() { Exact = true }).CountAsync() > 0;
+    public async Task<bool> IsProductInCartAsync(string productName)
+    {
+        TestLogger.LogInformation($"Checking whether product is in the cart: {productName}.");
+        return await _productNames.GetByText(productName, new() { Exact = true }).CountAsync() > 0;
+    }
 
     public async Task RemoveProductAsync(string productName)
     {
+        TestLogger.LogInformation($"Removing product from cart: {productName}.");
         var cartItem = _cartItems.Filter(new()
         {
             HasTextString = productName
@@ -38,7 +47,15 @@ public class CartPage
         await cartItem.GetByRole(AriaRole.Button, new() { NameString = "Remove" }).ClickAsync();
     }
 
-    public Task ContinueShoppingAsync() => _continueShoppingButton.ClickAsync();
+    public Task ContinueShoppingAsync()
+    {
+        TestLogger.LogInformation("Continuing shopping from the cart.");
+        return _continueShoppingButton.ClickAsync();
+    }
 
-    public Task CheckoutAsync() => _checkoutButton.ClickAsync();
+    public Task CheckoutAsync()
+    {
+        TestLogger.LogInformation("Proceeding to checkout.");
+        return _checkoutButton.ClickAsync();
+    }
 }

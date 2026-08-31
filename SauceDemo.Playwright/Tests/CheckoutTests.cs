@@ -22,6 +22,7 @@ public class CheckoutTests : BaseTest
 
         var cartPage = new CartPage(Page);
 
+        Logger.Information("Verifying the selected product is in the cart.");
         Assert.That(await cartPage.IsProductInCartAsync("Sauce Labs Backpack"), Is.True);
 
         await cartPage.CheckoutAsync();
@@ -31,12 +32,14 @@ public class CheckoutTests : BaseTest
         await checkoutPage.EnterCustomerInformationAsync("Gourab", "Tester", "560001");
         await checkoutPage.ContinueToOverviewAsync();
 
+        Logger.Information("Verifying the checkout overview is displayed.");
         Assert.That(await checkoutPage.IsCheckoutOverviewDisplayedAsync(), Is.True);
 
         await checkoutPage.FinishOrderAsync();
 
         var orderConfirmationMessage = await checkoutPage.GetOrderConfirmationMessageAsync();
 
+        Logger.Information("Verifying the order confirmation message.");
         Assert.That(orderConfirmationMessage, Does.Contain("Thank you for your order"));
     }
 }

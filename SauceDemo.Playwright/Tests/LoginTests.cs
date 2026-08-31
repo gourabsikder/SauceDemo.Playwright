@@ -15,6 +15,7 @@ public class LoginTests : BaseTest
         await loginPage.NavigateToLoginPageAsync(Configuration.BaseUrl);
         await loginPage.LoginAsync(Configuration.StandardUser.Username, Configuration.StandardUser.Password);
 
+        Logger.Information("Verifying navigation to the inventory page.");
         await Expect(Page).ToHaveURLAsync(Configuration.GetUrl(Configuration.InventoryPath).AbsoluteUri);
     }
 
@@ -28,6 +29,7 @@ public class LoginTests : BaseTest
 
         var errorMessage = await loginPage.GetErrorMessageAsync();
 
+        Logger.Information("Verifying invalid-login error message.");
         Assert.That(errorMessage, Does.Contain(Configuration.InvalidCredentialsMessage));
     }
 
@@ -41,6 +43,7 @@ public class LoginTests : BaseTest
 
         var errorMessage = await loginPage.GetErrorMessageAsync();
 
+        Logger.Information("Verifying locked-out-user error message.");
         Assert.That(errorMessage, Does.Contain(Configuration.LockedOutMessage));
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using SauceDemo.Playwright.Logging;
 
 namespace SauceDemo.Playwright.Pages;
 
@@ -29,26 +30,41 @@ public class CheckoutPage
 
     public async Task EnterCustomerInformationAsync(string firstName, string lastName, string postalCode)
     {
+        TestLogger.LogInformation("Entering checkout customer information.");
         await _firstNameInput.FillAsync(firstName);
         await _lastNameInput.FillAsync(lastName);
         await _postalCodeInput.FillAsync(postalCode);
     }
 
-    public Task ContinueToOverviewAsync() => _continueButton.ClickAsync();
+    public Task ContinueToOverviewAsync()
+    {
+        TestLogger.LogInformation("Continuing to checkout overview.");
+        return _continueButton.ClickAsync();
+    }
 
     public async Task<bool> IsCheckoutOverviewDisplayedAsync()
     {
+        TestLogger.LogInformation("Checking checkout overview visibility.");
         await _checkoutOverview.WaitForAsync();
         return await _checkoutOverview.IsVisibleAsync();
     }
 
     public async Task FinishOrderAsync()
     {
+        TestLogger.LogInformation("Finishing the order.");
         await _checkoutOverview.WaitForAsync();
         await _finishButton.ClickAsync();
     }
 
-    public Task<string> GetOrderConfirmationMessageAsync() => _orderConfirmationMessage.InnerTextAsync();
+    public Task<string> GetOrderConfirmationMessageAsync()
+    {
+        TestLogger.LogInformation("Reading order confirmation message.");
+        return _orderConfirmationMessage.InnerTextAsync();
+    }
 
-    public Task BackToHomeAsync() => _backHomeButton.ClickAsync();
+    public Task BackToHomeAsync()
+    {
+        TestLogger.LogInformation("Returning to products from order confirmation.");
+        return _backHomeButton.ClickAsync();
+    }
 }

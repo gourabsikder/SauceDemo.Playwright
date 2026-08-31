@@ -22,7 +22,9 @@ public class CartTests : BaseTest
 
         var cartPage = new CartPage(Page);
 
+        Logger.Information("Verifying the selected product is in the cart.");
         Assert.That(await cartPage.IsProductInCartAsync("Sauce Labs Backpack"), Is.True);
+        Logger.Information("Verifying the cart contains one item.");
         Assert.That(await cartPage.GetCartItemCountAsync(), Is.EqualTo(1));
     }
 
@@ -41,11 +43,14 @@ public class CartTests : BaseTest
 
         var cartPage = new CartPage(Page);
 
+        Logger.Information("Verifying the selected product is in the cart.");
         Assert.That(await cartPage.IsProductInCartAsync("Sauce Labs Backpack"), Is.True);
 
         await cartPage.RemoveProductAsync("Sauce Labs Backpack");
 
+        Logger.Information("Verifying the product was removed from the cart.");
         Assert.That(await cartPage.IsProductInCartAsync("Sauce Labs Backpack"), Is.False);
+        Logger.Information("Verifying the cart is empty.");
         Assert.That(await cartPage.GetCartItemCountAsync(), Is.EqualTo(0));
     }
 }
