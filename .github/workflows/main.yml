@@ -16,10 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET 10 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Restore dependencies
         run: dotnet restore
@@ -33,10 +33,10 @@ jobs:
           $playwrightScript = Get-ChildItem -Path . -Recurse -Filter playwright.ps1 | Select-Object -First 1
           & $playwrightScript.FullName install
 
-      - name: Run tests
-        run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+      - name: Run tests and generate reports
+        run: dotnet test --no-build --configuration Release -- --report-html --report-html-filename test-report.html --report-trx --report-trx-filename test-results.trx
 
-      - name: Upload test results
+      - name: Upload test results and reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
