@@ -36,6 +36,22 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
 
+      - name: Generate HTML test report
+        if: always()
+        uses: BrammyS/trx-tools@v1.1.4
+        with:
+          report-type: html
+          trx-directory: SauceDemo.Playwright/TestResults
+          report-file: SauceDemo.Playwright/TestResults/test-report.html
+
+      - name: Upload HTML test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-test-report
+          path: SauceDemo.Playwright/TestResults/test-report.html
+          if-no-files-found: warn
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
